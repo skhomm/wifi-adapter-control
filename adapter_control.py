@@ -23,14 +23,14 @@ FILTER = ' '
 DEBUG = True
 
 # These are the commands to get the WLANPi ready to stream the tcpdump data
-commands_list_monitor = [
+commands_list_managed = [
     ['Killing old tcpdump processes...', '/usr/bin/pkill -f tcpdump > /dev/null 2>&1'],
     ['Killing processes that may interfere with airmon-ng...', 'airmon-ng check kill > /dev/null 2>&1'],
     ['Bringing WLAN card up...', 'ifconfig {} up'.format(WLAN_PI_IFACE)],
-    ['Setting wireless adapter to monitor mode', 'iw dev {} set managed'.format(WLAN_PI_IFACE)]
+    ['Setting wireless adapter to managed mode', 'iw dev {} set type managed'.format(WLAN_PI_IFACE)]
 ]
 
-commands_list_managed = [
+commands_list_monitor = [
     ['Killing old tcpdump processes...', '/usr/bin/pkill -f tcpdump > /dev/null 2>&1'],
     ['Killing processes that may interfere with airmon-ng...', 'airmon-ng check kill > /dev/null 2>&1'],
     ['Bringing WLAN card up...', 'ifconfig {} up'.format(WLAN_PI_IFACE)],
@@ -41,13 +41,11 @@ commands_list_managed = [
 
 def menu():
     print("Select task\n")
-    print("[0] Change adapter mode")
-    print("[1] Start packet capture")
-    print("[2] Association Request analysis")
-    print("[3] Start roaming test")
+    print("[1] Change adapter mode to MONITOR")
+    print("[2] Change adapter mode to MANAGED")
 
 
-def option_0():
+def option_1():
     # execute each command in turn
     for command in commands_list_monitor:
 
@@ -64,7 +62,7 @@ def option_0():
                 print("Error executing command: {} (Error msg: {})".format(command[1], ex))
 
 
-def option_1():
+def option_2():
     # execute each command in turn
     for command in commands_list_managed:
 
@@ -84,7 +82,7 @@ def option_1():
 menu()
 task_chosen = input("\nType number and press Enter\n")
 
-if task_chosen == "0":
-    option_0()
-elif task_chosen == "1":
+if task_chosen == "1":
     option_1()
+elif task_chosen == "2":
+    option_2()
