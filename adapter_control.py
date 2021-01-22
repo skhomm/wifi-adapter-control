@@ -22,28 +22,69 @@ SLICE = '0'
 FILTER = ' '
 DEBUG = True
 
-
 # These are the commands to get the WLANPi ready to stream the tcpdump data
-commands_list = [
+commands_list_monitor = [
     ['Killing old tcpdump processes...', '/usr/bin/pkill -f tcpdump > /dev/null 2>&1'],
-    ['Killing processes that may interfere with airmon-ng...', 'airmon-ng check kill > /dev/null 2>&1' ],
-    ['Bringing WLAN card up...', 'ifconfig {} up'.format(WLAN_PI_IFACE) ],
-    ['Setting wireless adapter to monitor mode', 'iw {} set monitor none'.format(WLAN_PI_IFACE) ],
-    ['Setting wireless adapter to channel {} (channel width {})'.format(CHANNEL_NUMBER, CHANNEL_WIDTH), 'iw {} set channel {} {}'.format(WLAN_PI_IFACE, CHANNEL_NUMBER, CHANNEL_WIDTH) ],
-
+    ['Killing processes that may interfere with airmon-ng...', 'airmon-ng check kill > /dev/null 2>&1'],
+    ['Bringing WLAN card up...', 'ifconfig {} up'.format(WLAN_PI_IFACE)],
+    ['Setting wireless adapter to monitor mode', 'iw dev {} set managed'.format(WLAN_PI_IFACE)]
 ]
 
-# execute each command in turn
-for command in commands_list:
+commands_list_managed = [
+    ['Killing old tcpdump processes...', '/usr/bin/pkill -f tcpdump > /dev/null 2>&1'],
+    ['Killing processes that may interfere with airmon-ng...', 'airmon-ng check kill > /dev/null 2>&1'],
+    ['Bringing WLAN card up...', 'ifconfig {} up'.format(WLAN_PI_IFACE)],
+    ['Setting wireless adapter to monitor mode', 'iw {} set monitor none'.format(WLAN_PI_IFACE)],
+    ['Setting wireless adapter to channel {} (channel width {})'.format(CHANNEL_NUMBER, CHANNEL_WIDTH), 'iw {} set channel {} {}'.format(WLAN_PI_IFACE, CHANNEL_NUMBER, CHANNEL_WIDTH)],
+]
 
-    if DEBUG:
-        print(command[0])
-        print("Command : " + str(command[1]))
 
-    try:
-        cmd_output = subprocess.call(command[1], shell=True)
+def menu():
+    print("Select task\n")
+    print("[0] Change adapter mode")
+    print("[1] Start packet capture")
+    print("[2] Association Request analysis")
+    print("[3] Start roaming test")
+
+
+def option_0():
+    # execute each command in turn
+    for command in commands_list_monitor:
+
         if DEBUG:
-            print("Command output: " + str(cmd_output))
-    except Exception as ex:
+            print(command[0])
+            print("Command : " + str(command[1]))
+
+        try:
+            cmd_output = subprocess.call(command[1], shell=True)
+            if DEBUG:
+                print("Command output: " + str(cmd_output))
+        except Exception as ex:
+            if DEBUG:
+                print("Error executing command: {} (Error msg: {})".format(command[1], ex))
+
+
+def option_1():
+    # execute each command in turn
+    for command in commands_list_managed:
+
         if DEBUG:
-            print("Error executing command: {} (Error msg: {})".format(command[1], ex))
+            print(command[0])
+            print("Command : " + str(command[1]))
+
+        try:
+            cmd_output = subprocess.call(command[1], shell=True)
+            if DEBUG:
+                print("Command output: " + str(cmd_output))
+        except Exception as ex:
+            if DEBUG:
+                print("Error executing command: {} (Error msg: {})".format(command[1], ex))
+
+
+menu()
+task_chosen = input("\nType number and press Enter\n")
+
+if task_chosen == "0":
+    option_0()
+elif task_chosen == "1":
+    option_1()
