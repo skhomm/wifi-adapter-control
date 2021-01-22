@@ -1,6 +1,5 @@
 import sys
 import os
-import getopt
 import subprocess
 
 __author__ = 'Nigel Bowden'
@@ -9,7 +8,7 @@ __email__ = 'wifinigel@gmail.com'
 __status__ = 'beta'
 
 # we must be root to run this script - exit with msg if not
-if not os.geteuid()==0:
+if not os.geteuid() == 0:
     print("\n#####################################################################################")
     print("You must be root to run this script (use 'sudo wlanpishark.py') - exiting")
     print("#####################################################################################\n")
@@ -21,17 +20,17 @@ CHANNEL_WIDTH = 'HT20'
 CHANNEL_NUMBER = '36'
 SLICE = '0'
 FILTER = ' '
-DEBUG = False
+DEBUG = True
 
 
 # These are the commands to get the WLANPi ready to stream the tcpdump data
 commands_list = [
-    [ 'Killing old tcpdump processes...', '/usr/bin/pkill -f tcpdump > /dev/null 2>&1'],
-    [ 'Killing processes that may interfere with airmon-ng...', 'airmon-ng check kill > /dev/null 2>&1' ],
-    [ 'Bringing WLAN card up...', 'ifconfig {} up'.format(WLAN_PI_IFACE) ],
-    [ 'Setting wireless adapter to monitor mode', 'iw {} set monitor none'.format(WLAN_PI_IFACE) ],
-    [ 'Setting wireless adapter to channel {} (channel width {})'.format(CHANNEL_NUMBER, CHANNEL_WIDTH), 'iw {} set channel {} {}'.format(WLAN_PI_IFACE, CHANNEL_NUMBER, CHANNEL_WIDTH) ],
-    
+    ['Killing old tcpdump processes...', '/usr/bin/pkill -f tcpdump > /dev/null 2>&1'],
+    ['Killing processes that may interfere with airmon-ng...', 'airmon-ng check kill > /dev/null 2>&1' ],
+    ['Bringing WLAN card up...', 'ifconfig {} up'.format(WLAN_PI_IFACE) ],
+    ['Setting wireless adapter to monitor mode', 'iw {} set monitor none'.format(WLAN_PI_IFACE) ],
+    ['Setting wireless adapter to channel {} (channel width {})'.format(CHANNEL_NUMBER, CHANNEL_WIDTH), 'iw {} set channel {} {}'.format(WLAN_PI_IFACE, CHANNEL_NUMBER, CHANNEL_WIDTH) ],
+
 ]
 
 # execute each command in turn
