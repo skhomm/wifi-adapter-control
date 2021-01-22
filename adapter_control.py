@@ -41,8 +41,13 @@ commands_list_monitor = [
 
 def menu():
     print("Select task\n")
+    print("[0] Start tcpdump")
     print("[1] Change adapter mode to MONITOR")
     print("[2] Change adapter mode to MANAGED")
+
+
+def option_0():
+    subprocess.call('tcpdump -n -i {} -U -s {} -G 60 -w dump-%m%d-%H%M.pcap {}'.format(WLAN_PI_IFACE, SLICE, FILTER), shell=True)
 
 
 def option_1():
@@ -82,7 +87,9 @@ def option_2():
 menu()
 task_chosen = input("\nType number and press Enter\n")
 
-if task_chosen == "1":
+if task_chosen == "0":
+    option_0()
+elif task_chosen == "1":
     option_1()
 elif task_chosen == "2":
     option_2()
