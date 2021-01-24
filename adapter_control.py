@@ -1,3 +1,12 @@
+"""
+This module controls the wireless adapter mode and starts a capture if needed.
+
+It provides an interactive shell to set all required parameters.
+You may also find useful calling change_mode(adapter, mode, channel, width)
+from other programms.
+"""
+
+
 import sys
 import os
 import subprocess
@@ -9,6 +18,15 @@ if not os.geteuid() == 0:
     print("You must be root to run this script (use 'sudo adapter_control.py') - exiting")
     print("#####################################################################################\n")
     sys.exit()
+
+CHANNELS_2GHZ = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+CHANNELS_5GHZ = [
+                36, 40, 44, 48,
+                52, 56, 60, 64,
+                100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144,
+                149, 153, 157, 161, 165
+            ]
+CHANNEL_WIDTHS = {1: 'HT20', 2: 'HT40-', 3: 'HT40+', 4: '80MHz'}
 
 # Initialize variables in case we do not get any parameters passed to us
 WLAN_PI_IFACE = 'wlan0'
@@ -27,16 +45,16 @@ def change_mode(adapter, mode, channel, width):
     commands_list_managed = [
         ['Killing old tcpdump processes...', '/usr/bin/pkill -f tcpdump > /dev/null 2>&1'],
         ['Killing processes that may interfere with airmon-ng...', 'airmon-ng check kill > /dev/null 2>&1'],
-        ['Bringing WLAN card up...', 'ifconfig {} up'.format(adapter)],
-        ['Setting wireless adapter to managed mode', 'iw dev {} set type managed'.format(adapter)]
+        ['Bringing WLAN card up...', f'ifconfig {adapter} up'],
+        ['Setting wireless adapter to managed mode', f'iw dev {adapter} set type managed']
     ]
 
     commands_list_monitor = [
         ['Killing old tcpdump processes...', '/usr/bin/pkill -f tcpdump > /dev/null 2>&1'],
         ['Killing processes that may interfere with airmon-ng...', 'airmon-ng check kill > /dev/null 2>&1'],
-        ['Bringing WLAN card up...', 'ifconfig {} up'.format(adapter)],
-        ['Setting wireless adapter to monitor mode', 'iw {} set monitor none'.format(adapter)],
-        ['Setting wireless adapter to channel {} (channel width {})'.format(channel, width), 'iw {} set channel {} {}'.format(adapter, channel, width)]
+        ['Bringing WLAN card up...', f'ifconfig {adapter} up'],
+        ['Setting wireless adapter to monitor mode', f'iw {adapter} set monitor none'],
+        [f'Setting wireless adapter to channel {channel} (channel width {width})', 'iw {adapter} set channel {channel} {width}']
     ]
 
     if mode == 'managed':
@@ -52,7 +70,7 @@ def change_mode(adapter, mode, channel, width):
 
             except Exception as ex:
                 if DEBUG:
-                    print("Error executing command: {} (Error msg: {})".format(command[1], ex))
+                    print(f"Error executing command: {command[1]} (Error msg: {ex})")
 
     elif mode == 'monitor':
         for command in commands_list_monitor:
@@ -67,15 +85,30 @@ def change_mode(adapter, mode, channel, width):
 
             except Exception as ex:
                 if DEBUG:
-                    print("Error executing command: {} (Error msg: {})".format(command[1], ex))
+                    print(f"Error executing command: {command[1]} (Error msg: {ex})")
     else:
         print("Mode not selected")
 
 
-def get_channel():
-    global current_channel, current_width
+def get_channel_number():
+    global current_channel
+
+    print(f"\nAvailable channels: \n2.4GHz: {CHANNELS_2GHZ} \n5GHz: {CHANNELS_5GHZ}")
     current_channel = input("\nType channel number and press Enter\n")
-    current_width = input("\nType channel width and press Enter\n")
+
+    while int(current_channel) not in (CHANNELS_2GHZ + CHANNELS_5GHZ):
+        get_channel_number()
+
+
+def get_channel_width():
+    global current_width
+
+    print(f"\nAvailable channelwidths: {CHANNEL_WIDTHS}")
+    current_width_input = input("\nType channel width and press Enter\n")
+    while int(current_width_input) not in CHANNEL_WIDTHS:
+        get_channel_width()
+
+    current_width = CHANNEL_WIDTHS[int(current_width_input)]
 
 
 def start_tcpdump(adapter, options):
@@ -120,7 +153,9 @@ def option_2():
 
 
 def option_3():
-    get_channel()
+    get_channel_number()
+    get_channel_width()
 
 
-menu()
+if __name__ == '__main__':
+    menu()
