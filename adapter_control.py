@@ -4,6 +4,8 @@ This module controls the wireless adapter mode and starts a capture if needed.
 It provides an interactive shell to set all required parameters.
 You may also find useful calling change_mode(adapter, mode, channel, width)
 from other programms.
+
+It does not parse current wireless adapter state yet (mode and freq).
 """
 
 
@@ -121,9 +123,11 @@ def check_iwconfig(adapter):
     subprocess.call(f'iwconfig {adapter}', shell=True)
 
 
+# One day this menu will adapt to current adapter state
 def menu():
     print()
     print("===="*20)
+    print("These are settings to apply, not current state")
     print(f"Adapter: {current_adapter}")
     print(f"Channel number: {current_channel}")
     print(f"Channel width: {current_width}")
