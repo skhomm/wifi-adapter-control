@@ -122,6 +122,7 @@ def check_iwconfig(adapter):
 
 
 def menu():
+    print()
     print("===="*20)
     print(f"Adapter: {current_adapter}")
     print(f"Channel number: {current_channel}")
