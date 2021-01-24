@@ -103,17 +103,22 @@ def get_channel_number():
 
 def get_channel_width():
     global current_width
+    global current_width_input
 
     print(f"\nAvailable channel width: \n{CHANNEL_WIDTHS}")
-    current_width_input = input("\nType number and press Enter\n")
+    current_width_input = input("\nType corresponding number and press Enter\n")
+
     while int(current_width_input) not in CHANNEL_WIDTHS:
         get_channel_width()
-
     current_width = CHANNEL_WIDTHS[int(current_width_input)]
 
 
 def start_tcpdump(adapter, options):
     subprocess.call(f'tcpdump -i {adapter} {TCPDUMP_LOCATION} {options}', shell=True)
+
+
+def check_iwconfig(adapter):
+    subprocess.call(f'iwconfig {adapter}', shell=True)
 
 
 def menu():
@@ -129,6 +134,8 @@ def menu():
     print("[1] Change adapter mode to MANAGED")
     print("[2] Change adapter mode to MONITOR")
     print("[3] Change channel number and width")
+    print()
+    print(f"[9] Check iwconfig for {current_adapter}")
 
     task_chosen = input("\nType number and press Enter\n")
 
@@ -140,7 +147,8 @@ def menu():
         option_2()
     elif task_chosen == "3":
         option_3()
-
+    elif task_chosen == "9":
+        option_9()
     menu()
 
 
@@ -159,6 +167,10 @@ def option_2():
 def option_3():
     get_channel_number()
     get_channel_width()
+
+
+def option_9():
+    check_iwconfig(current_adapter)
 
 
 if __name__ == '__main__':
