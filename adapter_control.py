@@ -116,7 +116,9 @@ def get_channel_width():
 
 
 def start_tcpdump(adapter, options):
+    print("\n" + "===="*20)
     subprocess.call(f'tcpdump -i {adapter} {TCPDUMP_LOCATION} {options}', shell=True)
+    print("===="*20)
 
 
 def check_iwconfig(adapter):
