@@ -55,7 +55,7 @@ def change_mode(adapter, mode, channel, width):
         ['Killing processes that may interfere with airmon-ng...', 'airmon-ng check kill > /dev/null 2>&1'],
         ['Bringing WLAN card up...', f'ifconfig {adapter} up'],
         ['Setting wireless adapter to monitor mode', f'iw {adapter} set monitor none'],
-        [f'Setting wireless adapter to channel {channel} (channel width {width})', 'iw {adapter} set channel {channel} {width}']
+        [f'Setting wireless adapter to channel {channel} (channel width {width})', f'iw {adapter} set channel {channel} {width}']
     ]
 
     if mode == 'managed':
