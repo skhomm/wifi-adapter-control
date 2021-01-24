@@ -104,8 +104,8 @@ def get_channel_number():
 def get_channel_width():
     global current_width
 
-    print(f"\nAvailable channelwidths: {CHANNEL_WIDTHS}")
-    current_width_input = input("\nType channel width and press Enter\n")
+    print(f"\nAvailable channel width: \n{CHANNEL_WIDTHS}")
+    current_width_input = input("\nType number and press Enter\n")
     while int(current_width_input) not in CHANNEL_WIDTHS:
         get_channel_width()
 
