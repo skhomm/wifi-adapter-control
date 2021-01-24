@@ -33,7 +33,8 @@ WLAN_PI_IFACE = 'wlan0'
 CHANNEL_WIDTH = 'HT20'
 CHANNEL_NUMBER = '36'
 DEBUG = True
-TCPDUMP_OPTIONS = '-G 60 -w dump-%m%d-%H%M.pcap'
+TCPDUMP_OPTIONS = '-G 60'
+TCPDUMP_LOCATION = '-w dumps/dump-%m%d-%H%M.pcap'
 
 current_adapter = WLAN_PI_IFACE
 current_channel = CHANNEL_NUMBER
@@ -112,13 +113,16 @@ def get_channel_width():
 
 
 def start_tcpdump(adapter, options):
-    subprocess.call(f'tcpdump -i {adapter} {options}', shell=True)
+    subprocess.call(f'tcpdump -i {adapter} {TCPDUMP_LOCATION} {options}', shell=True)
 
 
 def menu():
-    print(f"\nAdapter: {current_adapter}")
+    print("===="*20)
+    print(f"Adapter: {current_adapter}")
     print(f"Channel number: {current_channel}")
     print(f"Channel width: {current_width}")
+    print(f"Tcpdump options: {current_tcpdump_options}")
+    print("===="*20)
 
     print("\nSelect task\n")
     print("[0] Start tcpdump")
