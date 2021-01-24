@@ -14,13 +14,13 @@ if not os.geteuid() == 0:
 WLAN_PI_IFACE = 'wlan0'
 CHANNEL_WIDTH = 'HT20'
 CHANNEL_NUMBER = '36'
-SLICE = '0'
-FILTER = ' '
 DEBUG = True
+TCPDUMP_OPTIONS = '-G 60 -w dump-%m%d-%H%M.pcap'
 
 current_adapter = WLAN_PI_IFACE
 current_channel = CHANNEL_NUMBER
 current_width = CHANNEL_WIDTH
+current_tcpdump_options = TCPDUMP_OPTIONS
 
 
 def change_mode(adapter, mode, channel, width):
@@ -78,6 +78,10 @@ def get_channel():
     current_width = input("\nType channel width and press Enter\n")
 
 
+def start_tcpdump(adapter, options):
+    subprocess.call(f'tcpdump -i {adapter} {options}', shell=True)
+
+
 def menu():
     print(f"\nAdapter: {current_adapter}")
     print(f"Channel number: {current_channel}")
@@ -104,15 +108,15 @@ def menu():
 
 
 def option_0():
-    subprocess.call('tcpdump -n -i {} -U -s {} -G 60 -w dump-%m%d-%H%M.pcap {}'.format(WLAN_PI_IFACE, SLICE, FILTER), shell=True)
+    start_tcpdump(current_adapter, current_tcpdump_options)
 
 
 def option_1():
-    change_mode(WLAN_PI_IFACE, 'managed', current_channel, current_width)
+    change_mode(current_adapter, 'managed', current_channel, current_width)
 
 
 def option_2():
-    change_mode(WLAN_PI_IFACE, 'monitor', current_channel, current_width)
+    change_mode(current_adapter, 'monitor', current_channel, current_width)
 
 
 def option_3():
