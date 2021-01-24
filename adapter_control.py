@@ -44,6 +44,7 @@ def menu():
     print("[0] Start tcpdump")
     print("[1] Change adapter mode to MONITOR")
     print("[2] Change adapter mode to MANAGED")
+    print("[3] Change channel number and width")
 
 
 def option_0():
@@ -83,6 +84,9 @@ def option_2():
             if DEBUG:
                 print("Error executing command: {} (Error msg: {})".format(command[1], ex))
 
+def option_3():
+    print("Not supported yet")
+
 
 menu()
 task_chosen = input("\nType number and press Enter\n")
@@ -93,3 +97,5 @@ elif task_chosen == "1":
     option_1()
 elif task_chosen == "2":
     option_2()
+elif task_chosen == "3":
+    option_3()
