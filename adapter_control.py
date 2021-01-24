@@ -125,9 +125,8 @@ def check_iwconfig(adapter):
 
 # One day this menu will adapt to current adapter state
 def menu():
-    print()
-    print("===="*20)
-    print("These are settings to apply, not current state")
+    print("\n" + "===="*20)
+    print("These are settings to apply, not the current state of adapter\n")
     print(f"Adapter: {current_adapter}")
     print(f"Channel number: {current_channel}")
     print(f"Channel width: {current_width}")
