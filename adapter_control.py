@@ -154,6 +154,8 @@ def menu():
         option_3()
     elif task_chosen == "9":
         option_9()
+    elif task_chosen == " ":
+        os.system('clear')
     menu()
 
 
